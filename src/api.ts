@@ -58,6 +58,7 @@ async function apiPut<TResponse, TBody extends object = Record<string, unknown>>
 export interface CodeTypeMapping {
   CodeTypeMappingID: number;
   AgencyName: string;
+  HA_CodeListID: number;  
   AgencyAbbreviation: string;
   HA_Code_List: string;
   Reg_App_Code_List: string;
@@ -86,14 +87,21 @@ export interface TermMapping {
 }
 
 // ---- API functions ----
+export interface TermMappingsQuery {
+  agencyName: string;
+  codeListId?: number;
+}
+
 
 export function fetchCodeTypeMappings(): Promise<CodeTypeMapping[]> {
   return apiGet<CodeTypeMapping[]>("/code-type-mappings");
 }
 
-// For now we filter by agencyName only (you can extend later)
-export function fetchTermMappings(agencyName: string): Promise<TermMapping[]> {
-  return apiGet<TermMapping[]>("/term-mappings", { agencyName });
+export function fetchTermMappings(params: TermMappingsQuery): Promise<TermMapping[]> {
+  return apiGet<TermMapping[]>("/term-mappings", {
+    agencyName: params.agencyName,
+    codeListId: params.codeListId?.toString(),
+  });
 }
 
 export interface UpdateTermMappingPayload {

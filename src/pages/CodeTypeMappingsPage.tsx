@@ -45,14 +45,16 @@ function CodeTypeMappingsPage() {
   }, []);
 
   const handleViewDetails = (row: CodeTypeMapping) => {
-    const params = new URLSearchParams({
-      agencyName: row.AgencyName,
-      haCodeList: row.HA_Code_List,
-      internalCodeList: row.Reg_App_Code_List,
-    }).toString();
+  const params = new URLSearchParams({
+    agencyName: row.AgencyName,
+    haCodeList: row.HA_Code_List,
+    internalCodeList: row.Reg_App_Code_List,
+    codeListId: row.HA_CodeListID.toString(),
+  }).toString();
 
-    navigate(`/mapping/${row.CodeTypeMappingID}?${params}`);
-  };
+  navigate(`/mapping/${row.CodeTypeMappingID}?${params}`);
+};
+
 
   return (
     <Box>

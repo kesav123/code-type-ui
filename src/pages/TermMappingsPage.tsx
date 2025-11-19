@@ -42,9 +42,12 @@ function TermMappingsPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const agencyName = searchParams.get("agencyName") ?? "";
-  const haCodeList = searchParams.get("haCodeList") ?? "";
-  const internalCodeList = searchParams.get("internalCodeList") ?? "";
+const agencyName = searchParams.get("agencyName") ?? "";
+const haCodeList = searchParams.get("haCodeList") ?? "";
+const internalCodeList = searchParams.get("internalCodeList") ?? "";
+const codeListIdParam = searchParams.get("codeListId");
+const codeListId = codeListIdParam ? Number(codeListIdParam) : undefined;
+
 
   const [rows, setRows] = useState<TermMapping[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,28 +65,32 @@ function TermMappingsPage() {
     [agencyName, haCodeList]
   );
 
-   useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        if (!agencyName) {
-          throw new Error("agencyName is required in query parameters");
-        }
-        const data = await fetchTermMappings(agencyName);
-        setRows(data);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Error loading term mappings");
-        }
-      } finally {
-        setLoading(false);
+  useEffect(() => {
+  const load = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      if (!agencyName) {
+        throw new Error("agencyName is required in query parameters");
       }
-    };
-    load();
-  }, [agencyName]);
+      const data = await fetchTermMappings({
+        agencyName,
+        codeListId,
+      });
+      setRows(data);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Error loading term mappings");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  load();
+}, [agencyName, codeListId]);
+
 
 
 
